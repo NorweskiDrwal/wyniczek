@@ -55,18 +55,38 @@ export const store = new Vuex.Store({
         school: payload.school
       }
       const user = getters.user
+      let key
       firebase.database().ref('users/' + user.id + '/details').push(userDetails)
         .then((data) => {
-          commit('setupUser', userDetails)
+          key = data.key
+          return key
+        })
+        .then((data) => {
+          commit('setupUser', {
+            ...userDetails,
+            id: key
+          })
         })
         .catch((error) => { console.log(error) })
     },
     fetchUser ({commit, getters}) {
-      firebase.database().ref('users/' + getters.user.id + '/details').once('value')
+      const user = firebase.auth().currentUser.uid
+      console.log(user)
+      firebase.database().ref('users/' + user + '/details/').once('value')
         .then((data) => {
-          var username = (data.val() && data.val().username) || 'Anonymous'
-          console.log(username)
-          commit('setupUser', username)
+          let userDetails = []
+          const obj = data.val()
+          for (let key in obj) {
+            userDetails = {
+              id: key,
+              username: obj[key].username,
+              name: obj[key].name,
+              age: obj[key].age,
+              school: obj[key].school
+            }
+          }
+          commit('setupUser', userDetails)
+          console.log(userDetails)
         })
     },
     autoLogin ({commit}, payload) {

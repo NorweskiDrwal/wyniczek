@@ -9,7 +9,7 @@
           <v-icon dark>menu</v-icon>
         </v-toolbar-items>
         <v-list id="dropdown__menu">
-          <v-list-tile v-if="userIsAuthenticated" class="dropdown__list" to="/profil">
+          <v-list-tile v-if="userIsAuthenticated" class="dropdown__list" @click="onFetch">
             <v-list-tile-title class="dropdown__list--item">Dzienniczek</v-list-tile-title>
           </v-list-tile>      
           <v-list-tile class="dropdown__list" v-for="item in menuItems" :key="item.title" :to="item.link">
@@ -42,7 +42,7 @@
     <!-- right menu -->   
       <v-spacer></v-spacer>
       <v-toolbar-items v-if="userIsAuthenticated" class="hidden-xs-only">
-        <v-btn class="toolbar__item --prof" :ripple="false" to="/profil" flat >
+        <v-btn class="toolbar__item --prof" :ripple="false" @click="onFetch" flat >
           <v-icon left>assignment</v-icon>
           Dzienniczek
         </v-btn>
@@ -107,6 +107,10 @@ export default {
     onLogout () {
       this.$store.dispatch('logout')
       this.$router.push('/')
+    },
+    onFetch () {
+      this.$store.dispatch('fetchUser')
+      this.$router.push('/profil')
     }
   }
 }

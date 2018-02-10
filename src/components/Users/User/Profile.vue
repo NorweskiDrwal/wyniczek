@@ -21,7 +21,7 @@
                   <img src="https://randomuser.me/api/portraits/men/85.jpg" />
                 </v-list-tile-avatar>
                 <v-list-tile-content>
-                  <v-list-tile-title>John Leider</v-list-tile-title>
+                  <v-list-tile-title>{{ userDetails.username }}</v-list-tile-title>
                 </v-list-tile-content>
               </v-list-tile>
             </v-list>
@@ -68,6 +68,11 @@
         solutions: false,
         calculators: false,
         theory: false
+      }
+    },
+    computed: {
+      userDetails () {
+        return this.$store.getters.userDetails
       }
     },
     methods: {

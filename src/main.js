@@ -48,6 +48,10 @@ new Vue({
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         this.$store.dispatch('autoLogin', user)
+        // var username = firebase.database().ref('users/' + user.id + '/details/').once('value').then((data) => {
+        //   this.$store.dispatch('setupUser', user)
+        // })
+        // console.log(username)
       }
     })
   }
