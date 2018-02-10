@@ -6,10 +6,10 @@
           <v-flex xs10 sm6 offset-xs1 offset-sm3>
             <v-form v-model="valid" ref="form" lazy-validation>
               <!-- <v-text-field
-                label="Nick"
-                type="name"
-                v-model="name"
-                :rules="nameRules"
+                label="Nazwa użytkownika"
+                type="username"
+                v-model="username"
+                :rules="[(v) => !!v || 'Nazwa użytkownika jest wymagana']"
                 required
               ></v-text-field> -->
               <v-text-field
@@ -67,12 +67,13 @@
         password: '',
         custom: true,
         visible: true,
-        checkbox: false
+        checkbox: false,
+        username: ''
       }
     },
     methods: {
       onRegister () {
-        this.$store.dispatch('registerUser', { email: this.email, password: this.password })
+        this.$store.dispatch('registerUser', { email: this.email, password: this.password, username: this.username })
       }
     },
     computed: {
@@ -89,7 +90,7 @@
     watch: {
       user (value) {
         if (value !== null && value !== undefined) {
-          this.$router.push('/pakiety')
+          this.$router.push('/rejestracja/konfiguracja')
         }
       }
     }

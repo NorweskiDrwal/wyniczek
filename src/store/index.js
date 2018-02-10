@@ -7,65 +7,70 @@ Vue.use(Vuex)
 
 export const store = new Vuex.Store({
   state: {
-    user: null
+    user: null,
+    userDetails: []
   },
   mutations: {
     setUser (state, payload) {
       state.user = payload
+    },
+    setupUser (state, payload) {
+      state.userDetails = payload
     }
   },
   actions: {
-    registerUser ({commit}, payload) {
-      commit('setLoading', true)
-      commit('clearError')
+    registerUser ({commit, getters}, payload) {
       firebase.auth().createUserWithEmailAndPassword(payload.email, payload.password)
-        .then(
-          user => {
-            commit('setLoading', false)
-            const newUser = {
-              id: user.uid,
-              fbKeys: {}
-            }
-            commit('setUser', newUser)
+        .then((user) => {
+          const newUser = {
+            id: user.uid
           }
-        )
-        .catch(
-          error => {
-            commit('setLoading', false)
-            commit('setError', error)
-            if (error.code === 'auth/email-already-in-use') {
-              console.log(error.message = 'Ten adres e-mail jest już w użyciu.')
-            }
+          commit('setUser', newUser)
+        })
+        .catch((error) => {
+          if (error.code === 'auth/email-already-in-use') {
+            console.log(error.message = 'Ten adres e-mail jest już w użyciu.')
           }
-        )
+        })
     },
     loginUser ({commit}, payload) {
-      commit('setLoading', true)
-      commit('clearError')
       firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
-        .then(
-          user => {
-            commit('setLoading', false)
-            const newUser = {
-              id: user.uid,
-              fbKeys: {}
-            }
-
-            commit('setUser', newUser)
+        .then((user) => {
+          const newUser = {
+            id: user.uid
           }
-        )
-        .catch(
-          error => {
-            commit('setLoading', false)
-            commit('setError', error)
-            if (error.code === 'auth/user-not-found') {
-              console.log(error.message = 'Nieprawidłowy adres e-mail lub hasło.')
-            }
+          commit('setUser', newUser)
+        })
+        .catch((error) => {
+          if (error.code === 'auth/user-not-found') {
+            console.log(error.message = 'Nieprawidłowy adres e-mail lub hasło.')
           }
-        )
+        })
+    },
+    setupUser ({commit, getters}, payload) {
+      const userDetails = {
+        username: payload.username,
+        name: payload.name,
+        age: payload.age,
+        school: payload.school
+      }
+      const user = getters.user
+      firebase.database().ref('users/' + user.id + '/details').push(userDetails)
+        .then((data) => {
+          commit('setupUser', userDetails)
+        })
+        .catch((error) => { console.log(error) })
+    },
+    fetchUser ({commit, getters}) {
+      firebase.database().ref('users/' + getters.user.id + '/details').once('value')
+        .then((data) => {
+          var username = (data.val() && data.val().username) || 'Anonymous'
+          console.log(username)
+          commit('setupUser', username)
+        })
     },
     autoLogin ({commit}, payload) {
-      commit('setUser', {id: payload.uid, fbKeys: {}})
+      commit('setUser', { id: payload.uid })
     },
     logout ({commit}) {
       firebase.auth().signOut()
@@ -75,6 +80,9 @@ export const store = new Vuex.Store({
   getters: {
     user (state) {
       return state.user
+    },
+    userDetails (state) {
+      return state.userDetails
     }
   }
 })

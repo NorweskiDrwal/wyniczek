@@ -6,6 +6,7 @@ import Service from '@/components/Website/Service'
 import Register from '@/components/Users/Register'
 import Login from '@/components/Users/Login'
 import Profile from '@/components/Users/User/Profile'
+import Setup from '@/components/Users/User/Setup'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/rejestracja',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/rejestracja/konfiguracja',
+      name: 'Setup',
+      component: Setup
     },
     {
       path: '/logowanie',
