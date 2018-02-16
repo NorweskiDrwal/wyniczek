@@ -38,12 +38,12 @@ new Vue({
   render: h => h(App),
   created () {
     firebase.initializeApp({
-      apiKey: 'AIzaSyC4c572CRWcNYPf6WBBeAWLby2puJ5ix4o',
-      authDomain: 'wyniczek-web.firebaseapp.com',
-      databaseURL: 'https://wyniczek-web.firebaseio.com',
-      projectId: 'wyniczek-web',
-      storageBucket: 'wyniczek-web.appspot.com',
-      messagingSenderId: '796494158130'
+      apiKey: 'AIzaSyDIy0PQfa7c81A5zw-QU1KV_X9hTJ9yubg',
+      authDomain: 'wyniczek-app.firebaseapp.com',
+      databaseURL: 'https://wyniczek-app.firebaseio.com',
+      projectId: 'wyniczek-app',
+      storageBucket: 'wyniczek-app.appspot.com',
+      messagingSenderId: '211064032373'
     })
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
